@@ -5,7 +5,7 @@ import {
   GridList,
   GridListTile,
   withStyles,
-  WithStyles
+  WithStyles,
 } from '@material-ui/core';
 
 import { Image } from '../types';
@@ -14,29 +14,44 @@ const styles = (theme: Theme) =>
   createStyles({
     gridList: {
       width: 500,
-      height: 450
-    }
+      height: 450,
+    },
   });
 
 interface ImageListPropTypes {
-  images: Image[];
+  imageSource: string;
 }
 
-class ImageList extends Component<
-  ImageListPropTypes & WithStyles<typeof styles>
-> {
-  render() {
-    const { images } = this.props;
+type ImageListState = {
+  imageIds: Number[];
+};
 
+class ImageList extends Component<
+  ImageListPropTypes & WithStyles<typeof styles>,
+  ImageListState
+> {
+  componentWillMount() {
+    this.setState({ imageIds: [] });
+  }
+
+  componentDidMount() {
+    fetch(this.props.imageSource)
+      .then((result) => result.json())
+      .then((result) => {
+        this.setState({ imageIds: result });
+      });
+  }
+
+  render() {
     return (
       <GridList
         cellHeight={160}
         cols={3}
         className={this.props.classes.gridList}
       >
-        {images.map(i => (
-          <GridListTile key={i.imageSource}>
-            <img src={i.imageSource} alt={i.imageAlt} />
+        {this.state.imageIds.map((i) => (
+          <GridListTile key={`${i}`}>
+            <img src={`/images/${i}`} alt={`${i}`} />
           </GridListTile>
         ))}
       </GridList>

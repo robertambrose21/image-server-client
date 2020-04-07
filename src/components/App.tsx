@@ -7,12 +7,10 @@ import {
   Typography,
   TextField,
   Grid,
-  GridList,
-  GridListTile,
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from '@material-ui/core';
 
 import img1 from '../assets/based.jpg';
@@ -32,8 +30,8 @@ const styles = (theme: Theme) =>
   createStyles({
     gridList: {
       width: 500,
-      height: 450
-    }
+      height: 450,
+    },
   });
 
 class App extends Component<WithStyles<typeof styles>, Tags> {
@@ -41,7 +39,7 @@ class App extends Component<WithStyles<typeof styles>, Tags> {
     super(styles, props);
 
     this.state = {
-      tags: []
+      tags: [],
     };
   }
 
@@ -49,8 +47,8 @@ class App extends Component<WithStyles<typeof styles>, Tags> {
     const url = '/tags';
 
     fetch(url)
-      .then(result => result.json())
-      .then(result => this.setState({ tags: result }));
+      .then((result) => result.json())
+      .then((result) => this.setState({ tags: result }));
   }
 
   render() {
@@ -71,7 +69,7 @@ class App extends Component<WithStyles<typeof styles>, Tags> {
               </Grid>
               <Grid item>
                 <List>
-                  {tags.map(t => (
+                  {tags.map((t) => (
                     <ListItem>
                       <ListItemText
                         primary={t.name}
@@ -84,7 +82,7 @@ class App extends Component<WithStyles<typeof styles>, Tags> {
             </Grid>
           </Grid>
           <Grid item>
-            <ImageList images={[{ imageSource: img1, imageAlt: 'img' }]} />
+            <ImageList imageSource="/images" />
           </Grid>
         </Grid>
       </Container>
