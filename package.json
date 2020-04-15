@@ -7,9 +7,11 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@types/react-router-dom": "^5.1.4",
     "eslint": "^6.8.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "typeface-roboto": "^0.0.75",
     "typescript": "^3.8.3"
@@ -24,7 +26,13 @@
   "eslintConfig": {
     "extends": "react-app",
     "rules": {
-      "quotes": [2, "single", { "avoidEscape": true }]
+      "quotes": [
+        2,
+        "single",
+        {
+          "avoidEscape": true
+        }
+      ]
     }
   },
   "browserslist": {

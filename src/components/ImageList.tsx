@@ -8,8 +8,6 @@ import {
   WithStyles,
 } from '@material-ui/core';
 
-import { Image } from '../types';
-
 const styles = (theme: Theme) =>
   createStyles({
     gridList: {
