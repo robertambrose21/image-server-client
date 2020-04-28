@@ -21,12 +21,12 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface HomeProperties {
+interface HomeProps {
   tags: Tag[];
 }
 
-class Home extends Component<WithStyles<typeof styles>, HomeProperties> {
-  constructor(styles: any, props: HomeProperties) {
+class Home extends Component<WithStyles<typeof styles>, HomeProps> {
+  constructor(styles: any, props: HomeProps) {
     super(styles, props);
 
     this.state = {

@@ -20,9 +20,9 @@ interface ImageListPropTypes {
   imageSource: string;
 }
 
-type ImageListState = {
+interface ImageListState {
   imageIds: Number[];
-};
+}
 
 class ImageList extends Component<
   ImageListPropTypes & WithStyles<typeof styles>,

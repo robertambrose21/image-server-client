@@ -8,3 +8,7 @@ export interface Image {
   imageSource: string;
   imageAlt: string;
 }
+
+export interface AddImageState {
+  imageUrl: string;
+}
