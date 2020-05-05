@@ -57,7 +57,7 @@ class Home extends Component<WithStyles<typeof styles>, HomeProps> {
             <Grid item>
               <List>
                 {tags.map((t) => (
-                  <ListItem>
+                  <ListItem key={t.name}>
                     <ListItemText
                       primary={t.name}
                       secondary={`count ${t.count}`}

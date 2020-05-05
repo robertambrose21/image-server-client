@@ -7,8 +7,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import { connect, ConnectedProps } from 'react-redux';
-import { ADD_IMAGE } from '../../constants/action-types';
-import { AddImageState } from '../../types';
+import { addImage } from '../../actions';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -17,47 +16,59 @@ const styles = (theme: Theme) =>
     },
   });
 
-const mapStateToProps = (state: AddImageState) => ({
-  imageUrl: state.imageUrl,
-});
-
 const mapDispatchToProps = {
-  addImage: (url: string) => ({
-    type: ADD_IMAGE,
-    payload: { imageUrl: url },
-  }),
+  addImage: addImage,
 };
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(null, mapDispatchToProps);
 
-// TODO: Refer to https://reactjs.org/docs/uncontrolled-components.html#the-file-input-tag for file handling
-class AddImage extends Component<
-  ConnectedProps<typeof connector> & WithStyles<typeof styles>
-> {
-  handleSubmit = (event: React.MouseEvent) => {
-    this.props.addImage('Test Image URL');
+type AddImageProps = ConnectedProps<typeof connector> &
+  WithStyles<typeof styles>;
+
+class AddImage extends Component<AddImageProps> {
+  fileInput: React.RefObject<HTMLInputElement>;
+
+  constructor(props: AddImageProps) {
+    super(props);
+    this.fileInput = React.createRef();
+  }
+
+  handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    var c = this.fileInput.current;
+    if (c && c.files) {
+      this.props.addImage({ data: c.files[0], url: c.files[0].name });
+    }
   };
 
   render() {
     return (
       <>
-        <input
-          id="add-image-button"
-          accept="image/*"
-          type="file"
-          multiple
-          className={this.props.classes.input}
-        />
-        <label htmlFor="add-image-button">
-          <Button
-            variant="contained"
-            color="primary"
-            component="span"
-            onClick={this.handleSubmit}
-          >
-            Add Image
-          </Button>
-        </label>
+        <form onSubmit={this.handleSubmit}>
+          <input
+            id="add-image-button"
+            accept="image/*"
+            type="file"
+            ref={this.fileInput}
+            className={this.props.classes.input}
+          />
+          <label htmlFor="add-image-button">
+            <Button variant="contained" color="primary" component="span">
+              Add Image
+            </Button>
+          </label>
+          <input
+            id="submit-button"
+            type="submit"
+            className={this.props.classes.input}
+          />
+          <label htmlFor="submit-button">
+            <Button variant="contained" color="primary" component="span">
+              Submit
+            </Button>
+          </label>
+        </form>
       </>
     );
   }

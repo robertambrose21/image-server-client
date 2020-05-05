@@ -5,10 +5,10 @@ export interface Tag {
 }
 
 export interface Image {
-  imageSource: string;
-  imageAlt: string;
+  data: File;
+  url: string;
 }
 
 export interface AddImageState {
-  imageUrl: string;
+  image?: Image;
 }

@@ -16,7 +16,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface ImageListPropTypes {
+interface ImageListProps {
   imageSource: string;
 }
 
@@ -24,8 +24,9 @@ interface ImageListState {
   imageIds: Number[];
 }
 
+// TODO: Redux actions
 class ImageList extends Component<
-  ImageListPropTypes & WithStyles<typeof styles>,
+  ImageListProps & WithStyles<typeof styles>,
   ImageListState
 > {
   componentWillMount() {
@@ -42,6 +43,7 @@ class ImageList extends Component<
 
   render() {
     return (
+      // TODO: Flexible columns
       <GridList
         cellHeight={160}
         cols={3}

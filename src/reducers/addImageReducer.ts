@@ -2,7 +2,7 @@ import { ImageActions, ADD_IMAGE } from '../constants/action-types';
 import { AddImageState } from '../types';
 
 const initialState: AddImageState = {
-  imageUrl: '',
+  image: undefined,
 };
 
 export function addImageReducer(
@@ -11,7 +11,6 @@ export function addImageReducer(
 ): AddImageState {
   switch (action.type) {
     case ADD_IMAGE:
-      console.log(`Adding image: '${action.payload.imageUrl}'`);
       return {
         ...state,
         ...action.payload,
