@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { connect, ConnectedProps } from 'react-redux';
 import { addImage } from '../../actions';
+import { RootState } from '../../reducers';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -16,11 +17,15 @@ const styles = (theme: Theme) =>
     },
   });
 
+const mapStateToProps = (state: RootState) => ({
+  image: state.imageReducer.image,
+});
+
 const mapDispatchToProps = {
   addImage: addImage,
 };
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type AddImageProps = ConnectedProps<typeof connector> &
   WithStyles<typeof styles>;
@@ -68,6 +73,7 @@ class AddImage extends Component<AddImageProps> {
               Submit
             </Button>
           </label>
+          <div>Uploading '{this.props.image?.url}'</div>
         </form>
       </>
     );
