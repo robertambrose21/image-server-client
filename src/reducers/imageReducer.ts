@@ -9,7 +9,7 @@ import { AddImageState, ImageUploadOptions } from '../types';
 const initialState: AddImageState = {
   uploadState: ImageUploadOptions.NONE,
   url: undefined,
-  image: undefined,
+  data: undefined,
 };
 
 // TODO: Read through: https://github.com/piotrwitek/react-redux-typescript-guide/blob/master/README.md#action-creators- and sort out actions/reducers
@@ -22,14 +22,14 @@ export function imageReducer(
       return {
         ...state,
         uploadState: ImageUploadOptions.UPLOADED,
-        image: action.image,
+        data: action.data,
       };
 
     case IMAGE_SUBMITTING:
       return {
         ...state,
+        url: action.url,
         uploadState: ImageUploadOptions.UPLOADING,
-        image: action.image,
       };
 
     case IMAGE_SELECTED:

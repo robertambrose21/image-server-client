@@ -4,11 +4,6 @@ export interface Tag {
   count: number;
 }
 
-export interface Image {
-  data: File;
-  url: string;
-}
-
 export enum ImageUploadOptions {
   NONE = 'NONE',
   SELECTED = 'SELECTED',
@@ -16,9 +11,8 @@ export enum ImageUploadOptions {
   UPLOADED = 'UPLOADED',
 }
 
-// TODO: Consider just getting rid of the Image interface seeing as url is duplicated here
 export interface AddImageState {
   uploadState: ImageUploadOptions; // TODO: Better name (don't use state!)
   url?: string;
-  image?: Image;
+  data?: File;
 }

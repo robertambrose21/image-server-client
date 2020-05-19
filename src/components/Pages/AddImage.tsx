@@ -11,7 +11,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { addImage } from '../../actions';
 import { RootState } from '../../reducers';
 import { ImageUploadOptions } from '../../types';
-import { Action, Dispatch } from 'redux';
+import { Dispatch } from 'redux';
 import { ImageActions, IMAGE_SELECTED } from '../../constants/action-types';
 
 const styles = (theme: Theme) =>
@@ -22,7 +22,6 @@ const styles = (theme: Theme) =>
   });
 
 const mapStateToProps = (state: RootState) => ({
-  image: state.imageReducer.image,
   uploadState: state.imageReducer.uploadState,
   url: state.imageReducer.url,
 });

@@ -1,17 +1,15 @@
-import { Image } from '../types';
-
 export const IMAGE_ADDED = 'IMAGE_ADDED';
 export const IMAGE_SUBMITTING = 'IMAGE_SUBMITTING';
 export const IMAGE_SELECTED = 'IMAGE_SELECTED';
 
 interface ImageAddedAction {
   type: typeof IMAGE_ADDED;
-  image: Image;
+  data: File;
 }
 
 interface ImageSubmittingAction {
   type: typeof IMAGE_SUBMITTING;
-  image: Image;
+  url: string;
 }
 
 interface ImageSelectedAction {

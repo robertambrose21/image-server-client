@@ -22,7 +22,7 @@ export const addImage = (
 
   dispatch({
     type: IMAGE_SUBMITTING,
-    image: image,
+    url: image.url,
   });
 
   const data = new FormData();
@@ -33,7 +33,7 @@ export const addImage = (
 
     dispatch({
       type: IMAGE_ADDED,
-      image: image,
+      data: image.data,
     });
   });
 };
