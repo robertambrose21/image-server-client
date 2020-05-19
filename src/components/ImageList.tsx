@@ -29,6 +29,7 @@ class ImageList extends Component<
   ImageListProps & WithStyles<typeof styles>,
   ImageListState
 > {
+  // TODO: Remove, use react hooks
   componentWillMount() {
     this.setState({ imageIds: [] });
   }

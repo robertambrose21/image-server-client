@@ -1,16 +1,25 @@
-import { AddImageState } from '../types';
+import { Image } from '../types';
 
 export const IMAGE_ADDED = 'IMAGE_ADDED';
 export const IMAGE_SUBMITTING = 'IMAGE_SUBMITTING';
-
-interface ImageSubmittingAction {
-  type: typeof IMAGE_SUBMITTING;
-  payload: AddImageState;
-}
+export const IMAGE_SELECTED = 'IMAGE_SELECTED';
 
 interface ImageAddedAction {
   type: typeof IMAGE_ADDED;
-  payload: AddImageState;
+  image: Image;
 }
 
-export type ImageActions = ImageSubmittingAction | ImageAddedAction;
+interface ImageSubmittingAction {
+  type: typeof IMAGE_SUBMITTING;
+  image: Image;
+}
+
+interface ImageSelectedAction {
+  type: typeof IMAGE_SELECTED;
+  url: string;
+}
+
+export type ImageActions =
+  | ImageAddedAction
+  | ImageSubmittingAction
+  | ImageSelectedAction;

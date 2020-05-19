@@ -5,10 +5,14 @@ import {
   createStyles,
   WithStyles,
   withStyles,
+  Typography,
 } from '@material-ui/core';
 import { connect, ConnectedProps } from 'react-redux';
 import { addImage } from '../../actions';
 import { RootState } from '../../reducers';
+import { ImageUploadOptions } from '../../types';
+import { Action, Dispatch } from 'redux';
+import { ImageActions, IMAGE_SELECTED } from '../../constants/action-types';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -19,10 +23,15 @@ const styles = (theme: Theme) =>
 
 const mapStateToProps = (state: RootState) => ({
   image: state.imageReducer.image,
+  uploadState: state.imageReducer.uploadState,
+  url: state.imageReducer.url,
 });
 
 const mapDispatchToProps = {
   addImage: addImage,
+  selectFile: (url: string) => (dispatch: Dispatch<ImageActions>) => {
+    dispatch({ type: IMAGE_SELECTED, url: url });
+  },
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -40,10 +49,35 @@ class AddImage extends Component<AddImageProps> {
 
   handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    this.props.addImage(this.fileInput.current);
+  };
 
-    var c = this.fileInput.current;
-    if (c && c.files) {
-      this.props.addImage({ data: c.files[0], url: c.files[0].name });
+  getCurrentFilename = () => {
+    const currentFileInput = this.fileInput.current;
+
+    if (currentFileInput === null || !currentFileInput.files) {
+      return undefined;
+    }
+
+    return currentFileInput.files[0].name;
+  };
+
+  getStatusText = () => {
+    const url = this.getCurrentFilename();
+
+    switch (this.props.uploadState) {
+      case ImageUploadOptions.SELECTED:
+        return `Image ${url} ready for upload.`;
+
+      case ImageUploadOptions.UPLOADING:
+        return `Uploading ${url}...`;
+
+      case ImageUploadOptions.UPLOADED:
+        return `Uploaded ${url}!`;
+
+      case ImageUploadOptions.NONE:
+      default:
+        return '';
     }
   };
 
@@ -57,6 +91,10 @@ class AddImage extends Component<AddImageProps> {
             type="file"
             ref={this.fileInput}
             className={this.props.classes.input}
+            onChange={(event: React.ChangeEvent) => {
+              console.log(this.getCurrentFilename());
+              this.props.selectFile(this.getCurrentFilename()!!);
+            }}
           />
           <label htmlFor="add-image-button">
             <Button variant="contained" color="primary" component="span">
@@ -73,7 +111,7 @@ class AddImage extends Component<AddImageProps> {
               Submit
             </Button>
           </label>
-          <div>Uploading '{this.props.image?.url}'</div>
+          <Typography>{this.getStatusText()}</Typography>
         </form>
       </>
     );
