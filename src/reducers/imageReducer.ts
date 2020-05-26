@@ -22,7 +22,6 @@ export function imageReducer(
       return {
         ...state,
         uploadState: ImageUploadOptions.UPLOADED,
-        data: action.data,
       };
 
     case IMAGE_SUBMITTING:

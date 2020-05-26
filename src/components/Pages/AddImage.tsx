@@ -1,120 +1,113 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Button,
-  Theme,
   createStyles,
   WithStyles,
   withStyles,
   Typography,
 } from '@material-ui/core';
-import { connect, ConnectedProps } from 'react-redux';
-import { addImage } from '../../actions';
-import { RootState } from '../../reducers';
+import { postImage } from '../../actions/imageActions';
 import { ImageUploadOptions } from '../../types';
-import { Dispatch } from 'redux';
-import { ImageActions, IMAGE_SELECTED } from '../../constants/action-types';
+import { IMAGE_SELECTED, IMAGE_SUBMITTING } from '../../constants/action-types';
+import { imageReducer } from '../../reducers/imageReducer';
+import useReducerWithThunk from '../../hooks/useReducerWithThunk';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     input: {
       display: 'none',
     },
   });
 
-const mapStateToProps = (state: RootState) => ({
-  uploadState: state.imageReducer.uploadState,
-  url: state.imageReducer.url,
-});
+type AddImageProps = WithStyles<typeof styles>;
 
-const mapDispatchToProps = {
-  addImage: addImage,
-  selectFile: (url: string) => (dispatch: Dispatch<ImageActions>) => {
-    dispatch({ type: IMAGE_SELECTED, url: url });
-  },
-};
+function AddImage(props: AddImageProps) {
+  const [state, dispatch] = useReducerWithThunk(imageReducer, {
+    uploadState: ImageUploadOptions.NONE,
+    url: undefined,
+  });
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+  const fileInput: React.RefObject<HTMLInputElement> = React.createRef();
 
-type AddImageProps = ConnectedProps<typeof connector> &
-  WithStyles<typeof styles>;
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
 
-class AddImage extends Component<AddImageProps> {
-  fileInput: React.RefObject<HTMLInputElement>;
+    const currentFileInput = fileInput.current;
 
-  constructor(props: AddImageProps) {
-    super(props);
-    this.fileInput = React.createRef();
+    if (currentFileInput === null || !currentFileInput.files) {
+      return;
+    }
+
+    // TODO: Handle multiple files
+    const image = {
+      data: currentFileInput.files[0],
+      url: currentFileInput.files[0].name,
+    };
+
+    dispatch({
+      type: IMAGE_SUBMITTING,
+      url: image.url,
+    });
+
+    const data = new FormData();
+    data.append('data', image.data);
+
+    dispatch(postImage(data));
   }
 
-  handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    this.props.addImage(this.fileInput.current);
-  };
-
-  getCurrentFilename = () => {
-    const currentFileInput = this.fileInput.current;
+  function getCurrentFilename() {
+    const currentFileInput = fileInput.current;
 
     if (currentFileInput === null || !currentFileInput.files) {
       return undefined;
     }
 
     return currentFileInput.files[0].name;
-  };
+  }
 
-  getStatusText = () => {
-    const url = this.getCurrentFilename();
-
-    switch (this.props.uploadState) {
+  function getStatusText() {
+    switch (state.uploadState) {
       case ImageUploadOptions.SELECTED:
-        return `Image ${url} ready for upload.`;
+        return `Image ${state.url} ready for upload.`;
 
       case ImageUploadOptions.UPLOADING:
-        return `Uploading ${url}...`;
+        return `Uploading ${state.url}...`;
 
       case ImageUploadOptions.UPLOADED:
-        return `Uploaded ${url}!`;
+        return `Uploaded ${state.url}!`;
 
       case ImageUploadOptions.NONE:
       default:
         return '';
     }
-  };
-
-  render() {
-    return (
-      <>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            id="add-image-button"
-            accept="image/*"
-            type="file"
-            ref={this.fileInput}
-            className={this.props.classes.input}
-            onChange={(event: React.ChangeEvent) => {
-              console.log(this.getCurrentFilename());
-              this.props.selectFile(this.getCurrentFilename()!!);
-            }}
-          />
-          <label htmlFor="add-image-button">
-            <Button variant="contained" color="primary" component="span">
-              Add Image
-            </Button>
-          </label>
-          <input
-            id="submit-button"
-            type="submit"
-            className={this.props.classes.input}
-          />
-          <label htmlFor="submit-button">
-            <Button variant="contained" color="primary" component="span">
-              Submit
-            </Button>
-          </label>
-          <Typography>{this.getStatusText()}</Typography>
-        </form>
-      </>
-    );
   }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        id="add-image-button"
+        accept="image/*"
+        type="file"
+        ref={fileInput}
+        className={props.classes.input}
+        onChange={(_event: React.ChangeEvent) => {
+          dispatch({ type: IMAGE_SELECTED, url: getCurrentFilename()!! });
+        }}
+      />
+      <label htmlFor="add-image-button">
+        <Button variant="contained" color="primary" component="span">
+          Add Image
+        </Button>
+      </label>
+      <input id="submit-button" type="submit" className={props.classes.input} />
+      <label htmlFor="submit-button">
+        <Button variant="contained" color="primary" component="span">
+          Submit
+        </Button>
+      </label>
+      <Typography>{getStatusText()}</Typography>
+    </form>
+  );
 }
 
-export default withStyles(styles)(connector(AddImage));
+export default withStyles(styles)(AddImage);

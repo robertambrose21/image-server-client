@@ -4,7 +4,6 @@ export const IMAGE_SELECTED = 'IMAGE_SELECTED';
 
 interface ImageAddedAction {
   type: typeof IMAGE_ADDED;
-  data: File;
 }
 
 interface ImageSubmittingAction {

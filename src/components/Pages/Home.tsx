@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   TextField,
@@ -21,59 +21,47 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface HomeProps {
-  tags: Tag[];
-}
+type HomeProps = WithStyles<typeof styles>;
 
-class Home extends Component<WithStyles<typeof styles>, HomeProps> {
-  constructor(styles: any, props: HomeProps) {
-    super(styles, props);
+function Home(props: HomeProps) {
+  const [tags, setTags] = useState<Tag[]>([]);
 
-    this.state = {
-      tags: [],
-    };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     const url = '/tags';
 
     fetch(url)
       .then((result) => result.json())
-      .then((result) => this.setState({ tags: result }));
-  }
+      .then((result) => setTags(result));
+  }, []);
 
-  render() {
-    const { tags } = this.state;
-
-    return (
-      <Grid container spacing={2}>
-        <Grid item>
-          <Grid container direction="column">
-            <Grid item>
-              <form>
-                <TextField id="tag-search" label="Search tags" />
-              </form>
-            </Grid>
-            <Grid item>
-              <List>
-                {tags.map((t) => (
-                  <ListItem key={t.name}>
-                    <ListItemText
-                      primary={t.name}
-                      secondary={`count ${t.count}`}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </Grid>
+  return (
+    <Grid container spacing={2}>
+      <Grid item>
+        <Grid container direction="column">
+          <Grid item>
+            <form>
+              <TextField id="tag-search" label="Search tags" />
+            </form>
+          </Grid>
+          <Grid item>
+            <List>
+              {tags.map((t) => (
+                <ListItem key={t.name}>
+                  <ListItemText
+                    primary={t.name}
+                    secondary={`count ${t.count}`}
+                  />
+                </ListItem>
+              ))}
+            </List>
           </Grid>
         </Grid>
-        <Grid item>
-          <ImageList imageSource="/images" />
-        </Grid>
       </Grid>
-    );
-  }
+      <Grid item>
+        <ImageList imageSource="/images" />
+      </Grid>
+    </Grid>
+  );
 }
 
 export default withStyles(styles)(Home);

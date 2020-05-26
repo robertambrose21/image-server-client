@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Theme,
   createStyles,
@@ -16,48 +16,29 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface ImageListProps {
+type ImageListProps = {
   imageSource: string;
-}
+} & WithStyles<typeof styles>;
 
-interface ImageListState {
-  imageIds: Number[];
-}
+function ImageList(props: ImageListProps) {
+  const [imageIds, setImageIds] = useState<Number[]>([]);
 
-// TODO: Redux actions
-class ImageList extends Component<
-  ImageListProps & WithStyles<typeof styles>,
-  ImageListState
-> {
-  // TODO: Remove, use react hooks
-  componentWillMount() {
-    this.setState({ imageIds: [] });
-  }
-
-  componentDidMount() {
-    fetch(this.props.imageSource)
+  useEffect(() => {
+    fetch(props.imageSource)
       .then((result) => result.json())
-      .then((result) => {
-        this.setState({ imageIds: result });
-      });
-  }
+      .then((result) => setImageIds(result));
+  }, [imageIds, props.imageSource]);
 
-  render() {
-    return (
-      // TODO: Flexible columns
-      <GridList
-        cellHeight={160}
-        cols={3}
-        className={this.props.classes.gridList}
-      >
-        {this.state.imageIds.map((i) => (
-          <GridListTile key={`${i}`}>
-            <img src={`/images/${i}`} alt={`${i}`} />
-          </GridListTile>
-        ))}
-      </GridList>
-    );
-  }
+  return (
+    // TODO: Flexible columns
+    <GridList cellHeight={160} cols={3} className={props.classes.gridList}>
+      {imageIds.map((i) => (
+        <GridListTile key={`${i}`}>
+          <img src={`/images/${i}`} alt={`${i}`} />
+        </GridListTile>
+      ))}
+    </GridList>
+  );
 }
 
 export default withStyles(styles)(ImageList);
