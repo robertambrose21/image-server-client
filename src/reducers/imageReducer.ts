@@ -12,7 +12,6 @@ const initialState: AddImageState = {
   data: undefined,
 };
 
-// TODO: Read through: https://github.com/piotrwitek/react-redux-typescript-guide/blob/master/README.md#action-creators- and sort out actions/reducers
 export function imageReducer(
   state = initialState,
   action: ImageActions

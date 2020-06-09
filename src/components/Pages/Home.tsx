@@ -35,6 +35,7 @@ function Home(props: HomeProps) {
   }, []);
 
   return (
+    // Tag component
     <Grid container spacing={2}>
       <Grid item>
         <Grid container direction="column">

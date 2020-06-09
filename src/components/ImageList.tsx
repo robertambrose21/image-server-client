@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Theme,
   createStyles,
   GridList,
   GridListTile,
   withStyles,
   WithStyles,
-  Modal,
   Link,
-  Box,
 } from '@material-ui/core';
+import ImageModal from './ImageModal';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     gridList: {
       width: 500,
       height: 450,
-    },
-    image: {
-      height: '100%',
     },
   });
 
@@ -44,16 +39,12 @@ function ImageList(props: ImageListProps) {
 
   return (
     <>
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          className={props.classes.image}
-        >
-          <img src={`/images/${currentImageId}/`} alt={`${currentImageId}`} />
-        </Box>
-      </Modal>
+      <ImageModal
+        open={modalOpen}
+        imageId={currentImageId}
+        onClose={() => setModalOpen(false)}
+      />
+      {/* TODO: Flexible columns based on screen width */}
       <GridList cellHeight={160} cols={3} className={props.classes.gridList}>
         {imageIds.map((i) => (
           <GridListTile key={`${i}`}>
