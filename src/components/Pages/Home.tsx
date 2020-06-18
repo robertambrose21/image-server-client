@@ -9,9 +9,11 @@ import {
   Theme,
   WithStyles,
   withStyles,
+  Box,
 } from '@material-ui/core';
 import ImageList from '../ImageList';
 import { Tag } from '../../types';
+import SearchTags from '../SearchTags';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,9 +38,9 @@ function Home(props: HomeProps) {
 
   return (
     // Tag component
-    <Grid container spacing={2}>
+    <Grid container spacing={2} direction="column">
       <Grid item>
-        <Grid container direction="column">
+        {/* <Grid container direction="column">
           <Grid item>
             <form>
               <TextField id="tag-search" label="Search tags" />
@@ -56,7 +58,8 @@ function Home(props: HomeProps) {
               ))}
             </List>
           </Grid>
-        </Grid>
+        </Grid> */}
+        <SearchTags />
       </Grid>
       <Grid item>
         <ImageList imageSource="/images" />

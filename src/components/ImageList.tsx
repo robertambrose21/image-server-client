@@ -8,18 +8,27 @@ import {
   Link,
 } from '@material-ui/core';
 import ImageModal from './ImageModal';
+import useWidth from '../hooks/useWidth';
 
 const styles = () =>
   createStyles({
     gridList: {
-      width: 500,
-      height: 450,
+      width: '100%',
+      height: '100%',
     },
   });
 
 type ImageListProps = {
   imageSource: string;
 } & WithStyles<typeof styles>;
+
+const numCols = {
+  xl: 7,
+  lg: 7,
+  md: 5,
+  sm: 3,
+  xs: 2,
+};
 
 function ImageList(props: ImageListProps) {
   const [imageIds, setImageIds] = useState<Number[]>([]);
@@ -30,7 +39,7 @@ function ImageList(props: ImageListProps) {
     fetch(props.imageSource)
       .then((result) => result.json())
       .then((result) => setImageIds(result));
-  }, [imageIds, props.imageSource]);
+  }, [props.imageSource]);
 
   const handleModalOpen = (imageId: Number) => {
     setCurrentImageId(imageId);
@@ -44,8 +53,11 @@ function ImageList(props: ImageListProps) {
         imageId={currentImageId}
         onClose={() => setModalOpen(false)}
       />
-      {/* TODO: Flexible columns based on screen width */}
-      <GridList cellHeight={160} cols={3} className={props.classes.gridList}>
+      <GridList
+        cellHeight={160}
+        cols={numCols[useWidth()]}
+        className={props.classes.gridList}
+      >
         {imageIds.map((i) => (
           <GridListTile key={`${i}`}>
             <Link href="#" onClick={() => handleModalOpen(i)}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   Box,
@@ -6,16 +6,21 @@ import {
   WithStyles,
   withStyles,
   Link,
+  CardMedia,
+  Card,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
 const styles = () =>
   createStyles({
     fullHeight: {
-      height: '100%',
+      height: '90vh',
     },
     button: {
       height: '0%',
+    },
+    boxHeight: {
+      height: '100%',
     },
   });
 
@@ -26,9 +31,25 @@ type ImadeModalProps = {
 } & WithStyles<typeof styles>;
 
 function ImageModal(props: ImadeModalProps) {
+  const [imageUrl, setImageUrl] = useState<string>();
+
+  useEffect(() => {
+    fetch(`/images/${props.imageId}/`)
+      .then((response) => {
+        return response.blob();
+      })
+      .then((blob) => {
+        setImageUrl(
+          URL.createObjectURL(
+            new File([blob], 'imagething.png', { type: 'image/png' })
+          )
+        );
+      });
+  }, [props.imageId]);
+
   return (
     <Modal open={props.open} onClose={() => props.onClose()}>
-      <Box className={props.classes.fullHeight}>
+      <Box>
         <Box
           display="flex"
           justifyContent="right"
@@ -43,9 +64,15 @@ function ImageModal(props: ImadeModalProps) {
           display="flex"
           alignItems="center"
           justifyContent="center"
-          className={props.classes.fullHeight}
+          className={props.classes.boxHeight}
         >
-          <img src={`/images/${props.imageId}/`} alt={`${props.imageId}`} />
+          <Card>
+            <CardMedia
+              image={imageUrl}
+              component="img"
+              className={props.classes.fullHeight}
+            />
+          </Card>
         </Box>
       </Box>
     </Modal>
