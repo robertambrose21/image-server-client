@@ -8,6 +8,7 @@ import {
   Link,
   CardMedia,
   Card,
+  Typography,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -32,6 +33,7 @@ type ImadeModalProps = {
 
 function ImageModal(props: ImadeModalProps) {
   const [imageUrl, setImageUrl] = useState<string>();
+  const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
     fetch(`/images/${props.imageId}/`)
@@ -41,10 +43,16 @@ function ImageModal(props: ImadeModalProps) {
       .then((blob) => {
         setImageUrl(
           URL.createObjectURL(
-            new File([blob], 'imagething.png', { type: 'image/png' })
+            new File([blob], 'image.png', { type: blob.type })
           )
         );
       });
+  }, [props.imageId]);
+
+  useEffect(() => {
+    fetch(`/images/${props.imageId}/tags`)
+      .then((response) => response.json())
+      .then((tags) => setTags(tags));
   }, [props.imageId]);
 
   return (
@@ -74,6 +82,7 @@ function ImageModal(props: ImadeModalProps) {
             />
           </Card>
         </Box>
+        <Typography>Tags: {tags.map((t) => `${t} `)}</Typography>
       </Box>
     </Modal>
   );
