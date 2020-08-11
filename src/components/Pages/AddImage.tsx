@@ -11,6 +11,7 @@ import { ImageUploadOptions } from '../../types';
 import { IMAGE_SELECTED, IMAGE_SUBMITTING } from '../../constants/action-types';
 import { imageReducer } from '../../reducers/imageReducer';
 import useReducerWithThunk from '../../hooks/useReducerWithThunk';
+import ImageUploadDropzone from '../ImageUploadDropzone';
 
 const styles = () =>
   createStyles({
@@ -82,31 +83,39 @@ function AddImage(props: AddImageProps) {
     }
   }
 
+  // TODO: Dropzone
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        id="add-image-button"
-        accept="image/*"
-        type="file"
-        ref={fileInput}
-        className={props.classes.input}
-        onChange={(_event: React.ChangeEvent) => {
-          dispatch({ type: IMAGE_SELECTED, url: getCurrentFilename()!! });
-        }}
-      />
-      <label htmlFor="add-image-button">
-        <Button variant="contained" color="primary" component="span">
-          Add Image
-        </Button>
-      </label>
-      <input id="submit-button" type="submit" className={props.classes.input} />
-      <label htmlFor="submit-button">
-        <Button variant="contained" color="primary" component="span">
-          Submit
-        </Button>
-      </label>
-      <Typography>{getStatusText()}</Typography>
-    </form>
+    <>
+      <form onSubmit={handleSubmit}>
+        <input
+          id="add-image-button"
+          accept="image/*"
+          type="file"
+          ref={fileInput}
+          className={props.classes.input}
+          onChange={(_event: React.ChangeEvent) => {
+            dispatch({ type: IMAGE_SELECTED, url: getCurrentFilename()!! });
+          }}
+        />
+        <label htmlFor="add-image-button">
+          <Button variant="contained" color="primary" component="span">
+            Add Image
+          </Button>
+        </label>
+        <input
+          id="submit-button"
+          type="submit"
+          className={props.classes.input}
+        />
+        <label htmlFor="submit-button">
+          <Button variant="contained" color="primary" component="span">
+            Submit
+          </Button>
+        </label>
+        <Typography>{getStatusText()}</Typography>
+      </form>
+      <ImageUploadDropzone />
+    </>
   );
 }
 
