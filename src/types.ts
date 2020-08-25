@@ -6,13 +6,12 @@ export interface Tag {
 
 export enum ImageUploadOptions {
   NONE = 'NONE',
-  SELECTED = 'SELECTED',
   UPLOADING = 'UPLOADING',
   UPLOADED = 'UPLOADED',
 }
 
 export interface AddImageState {
-  uploadState: ImageUploadOptions; // TODO: Better name (don't use state!)
+  uploadStatus: ImageUploadOptions;
   url?: string;
   data?: File;
 }

@@ -2,12 +2,11 @@ import {
   ImageActions,
   IMAGE_ADDED,
   IMAGE_SUBMITTING,
-  IMAGE_SELECTED,
 } from '../constants/action-types';
 import { AddImageState, ImageUploadOptions } from '../types';
 
 const initialState: AddImageState = {
-  uploadState: ImageUploadOptions.NONE,
+  uploadStatus: ImageUploadOptions.NONE,
   url: undefined,
   data: undefined,
 };
@@ -20,21 +19,14 @@ export function imageReducer(
     case IMAGE_ADDED:
       return {
         ...state,
-        uploadState: ImageUploadOptions.UPLOADED,
+        uploadStatus: ImageUploadOptions.UPLOADED,
       };
 
     case IMAGE_SUBMITTING:
       return {
         ...state,
         url: action.url,
-        uploadState: ImageUploadOptions.UPLOADING,
-      };
-
-    case IMAGE_SELECTED:
-      return {
-        ...state,
-        url: action.url,
-        uploadState: ImageUploadOptions.SELECTED,
+        uploadStatus: ImageUploadOptions.UPLOADING,
       };
 
     default:

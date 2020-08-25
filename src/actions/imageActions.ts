@@ -10,3 +10,5 @@ export const postImage = (
     .post('/images', data, {})
     .then((res) => dispatch({ type: IMAGE_ADDED }));
 };
+
+// TODO: postImages

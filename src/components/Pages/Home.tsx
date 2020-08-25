@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Grid,
-  TextField,
-  List,
-  ListItem,
-  ListItemText,
-  createStyles,
-  Theme,
-  WithStyles,
-  withStyles,
-  Box,
-} from '@material-ui/core';
+import { Grid, createStyles, WithStyles, withStyles } from '@material-ui/core';
 import ImageList from '../ImageList';
 import { Tag } from '../../types';
 import SearchTags from '../SearchTags';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     gridList: {
       width: 500,
@@ -25,8 +14,8 @@ const styles = (theme: Theme) =>
 
 type HomeProps = WithStyles<typeof styles>;
 
-function Home(props: HomeProps) {
-  const [tags, setTags] = useState<Tag[]>([]);
+function Home() {
+  const [, setTags] = useState<Tag[]>([]);
 
   useEffect(() => {
     const url = '/tags';
@@ -37,28 +26,8 @@ function Home(props: HomeProps) {
   }, []);
 
   return (
-    // Tag component
     <Grid container spacing={2} direction="column">
       <Grid item>
-        {/* <Grid container direction="column">
-          <Grid item>
-            <form>
-              <TextField id="tag-search" label="Search tags" />
-            </form>
-          </Grid>
-          <Grid item>
-            <List>
-              {tags.map((t) => (
-                <ListItem key={t.name}>
-                  <ListItemText
-                    primary={t.name}
-                    secondary={`count ${t.count}`}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-        </Grid> */}
         <SearchTags />
       </Grid>
       <Grid item>

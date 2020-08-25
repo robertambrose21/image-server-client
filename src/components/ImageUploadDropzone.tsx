@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   RootRef,
@@ -8,10 +8,13 @@ import {
   withStyles,
   WithStyles,
   Grid,
-  SvgIconProps,
 } from '@material-ui/core';
 import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
 import { ImageUploadOptions } from '../types';
+import useReducerWithThunk from '../hooks/useReducerWithThunk';
+import { imageReducer } from '../reducers/imageReducer';
+import { IMAGE_SUBMITTING } from '../constants/action-types';
+import { postImage } from '../actions/imageActions';
 
 const styles = () =>
   createStyles({
@@ -24,34 +27,50 @@ const styles = () =>
 type ImageUploadDropzoneProps = WithStyles<typeof styles>;
 
 function ImageUploadDropzone(props: ImageUploadDropzoneProps) {
-  const [status, setStatus] = useState<ImageUploadOptions>(
-    ImageUploadOptions.NONE
+  const [state, dispatch] = useReducerWithThunk(imageReducer, {
+    uploadStatus: ImageUploadOptions.NONE,
+    url: undefined,
+  });
+
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      // TODO: Handle multiple files - see postImages action type
+      const image = {
+        data: acceptedFiles[0],
+        url: acceptedFiles[0].name,
+      };
+
+      dispatch({
+        type: IMAGE_SUBMITTING,
+        url: image.url,
+      });
+
+      const data = new FormData();
+      data.append('data', image.data);
+
+      dispatch(postImage(data));
+      console.log(acceptedFiles);
+    },
+    [dispatch]
   );
-
-  const onDrop = useCallback((acceptedFiles) => {
-    setStatus(ImageUploadOptions.UPLOADING);
-
-    console.log(acceptedFiles);
-  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const { ref, ...rootProps } = getRootProps();
 
-  function getStatusText(status: ImageUploadOptions) {
-    switch (status) {
-      case ImageUploadOptions.NONE:
-        return '';
-      case ImageUploadOptions.SELECTED:
-        return ''; // TODO: Remove this - will no longer be relevant
+  function getStatusText() {
+    switch (state.uploadStatus) {
       case ImageUploadOptions.UPLOADING:
         return <Typography>Uploading...</Typography>;
       case ImageUploadOptions.UPLOADED:
         return <Typography>Uploaded!</Typography>;
+      case ImageUploadOptions.NONE:
+      default:
+        return '';
     }
   }
 
   function getIconColor() {
-    if (status === ImageUploadOptions.UPLOADING) {
+    if (state.uploadStatus === ImageUploadOptions.UPLOADING) {
       return 'disabled';
     }
 
@@ -75,7 +94,7 @@ function ImageUploadDropzone(props: ImageUploadDropzoneProps) {
               color={getIconColor()}
             />
           </Grid>
-          <Grid item>{getStatusText(status)}</Grid>
+          <Grid item>{getStatusText()}</Grid>
         </Grid>
       </Paper>
     </RootRef>
